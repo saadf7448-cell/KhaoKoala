@@ -10,10 +10,11 @@ export async function GET(request: NextRequest) {
   const type = searchParams.get("type") as EmailOtpType | null;
 
   const requestedNext = searchParams.get("next");
+
   const next =
     requestedNext?.startsWith("/") === true
       ? requestedNext
-      : "/account";
+      : "/";
 
   const redirectTo = request.nextUrl.clone();
 

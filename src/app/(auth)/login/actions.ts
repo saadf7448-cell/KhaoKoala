@@ -13,7 +13,9 @@ export async function login(formData: FormData) {
   const password = String(formData.get("password") ?? "");
 
   if (!email || !password) {
-    redirect("/login?error=Email%20and%20password%20are%20required.");
+    redirect(
+      "/login?error=Email%20and%20password%20are%20required.",
+    );
   }
 
   const supabase = await createClient();
@@ -24,9 +26,12 @@ export async function login(formData: FormData) {
   });
 
   if (error) {
-    redirect("/login?error=Invalid%20email%20or%20password.");
+    redirect(
+      "/login?error=Invalid%20email%20or%20password.",
+    );
   }
 
   revalidatePath("/", "layout");
-  redirect("/account");
+
+  redirect("/");
 }

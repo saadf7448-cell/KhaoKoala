@@ -1,8 +1,9 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 
 import { BrandMark } from "@/components/brand/brand-mark";
 import { Input } from "@/components/ui/input";
 import { PageContainer } from "@/components/ui/page-container";
+import { createClient } from "@/lib/supabase/server";
 
 function LocationIcon() {
   return (
@@ -59,12 +60,22 @@ function CartIcon() {
   );
 }
 
-export function SiteHeader() {
+export async function SiteHeader() {
+  const supabase = await createClient();
+
+  const { data } = await supabase.auth.getClaims();
+
+  const signedIn = Boolean(data?.claims?.sub);
+
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
       <PageContainer>
         <div className="flex min-h-16 items-center gap-3">
-          <Link href="/" aria-label="KhaoKoala home" className="shrink-0">
+          <Link
+            href="/"
+            aria-label="KhaoKoala home"
+            className="shrink-0"
+          >
             <BrandMark />
           </Link>
 
@@ -93,7 +104,10 @@ export function SiteHeader() {
             role="search"
             className="ml-auto hidden w-full max-w-sm lg:block"
           >
-            <label htmlFor="site-search" className="sr-only">
+            <label
+              htmlFor="site-search"
+              className="sr-only"
+            >
               Search restaurants and dishes
             </label>
 
@@ -112,15 +126,20 @@ export function SiteHeader() {
               className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-medium text-muted transition hover:bg-surface-muted hover:text-foreground"
             >
               <LocationIcon />
-              <span className="hidden xl:inline">Location</span>
+              <span className="hidden xl:inline">
+                Location
+              </span>
             </Link>
 
             <Link
-              href="/login"
+              href={signedIn ? "/account" : "/login"}
               className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-medium text-muted transition hover:bg-surface-muted hover:text-foreground"
             >
               <UserIcon />
-              <span className="hidden xl:inline">Sign in</span>
+
+              <span className="hidden xl:inline">
+                {signedIn ? "Account" : "Sign in"}
+              </span>
             </Link>
 
             <Link
